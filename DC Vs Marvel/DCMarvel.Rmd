@@ -1,25 +1,14 @@
 ---
 title: "R Notebook"
 output:
-  html_document:
-    toc: yes
   html_notebook: default
-  pdf_document:
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 8
-    number_sections: yes
-    toc: yes
-  word_document:
-    fig_caption: yes
-    fig_height: 6
-    fig_width: 8.5
-    toc: yes
+  html_document: default
 ---
+
 
 ```{r}
 
-options(repos="https://cran.rstudio.com" )
+#options(repos="https://cran.rstudio.com" )
 
 ```
 
@@ -27,18 +16,18 @@ options(repos="https://cran.rstudio.com" )
 ```{r Importing Libraries, include=FALSE}
 library(plyr)
 library(ggplot2)
-install.packages("wordcloud")
+#install.packages("wordcloud")
 library(wordcloud)
-install.packages("plotly")
+#install.packages("plotly")
 library(plotly)
 library(rpart)
 #install.packages("rattle")
 library(rattle)
 #install.packages("heuristica")
 library(heuristica)
-library(caret)
+##library(caret)
 #install.packages("contrib")
-install.packages("randomForest")
+#install.packages("randomForest")
 library(randomForest)
 
 ```
@@ -74,8 +63,6 @@ ggplot(Gender, aes(YEAR, Comics, col = SEX)) + geom_freqpoly(stat = "identity", 
 ggplotly()
 ```
 Clearly, and as expected, there is ratio  of males to females is heavily skewed with the males highly outnumbering the females.
-
-###Sex ratio of the genders 
 
 ```{r Sex Ratio, eval=FALSE, include=FALSE}
 sexRatio <- aggregate(page_id ~ YEAR + SEX, data = FullComics, FUN = function(x) {
@@ -132,6 +119,7 @@ Homosexuality no longer an illness: The World Health Organization
 
 These reasons, I believe, could be the reasons for the spike in the introduction of non-hetro-sexual characters.
 
+##Character Alignment - Factors that influence this
 
 The following plot gives the number of bad Vs good characters introduced over time.
 ```{r good Vs Bad}
@@ -151,7 +139,7 @@ As expected, the number of Bad characters always exceeds the number of Good char
 IDs <- aggregate(ALIGN ~ ID + YEAR + Comics, data = FullComics, FUN = length)
 #table(IDs$ID)
 ggplot(data = IDs, aes(YEAR, ALIGN, col = ID)) + geom_freqpoly(stat = "identity", lwd = 1) + facet_grid(Comics~.)
-ggplotly()
+#ggplotly()
 length(FullComics$ID[FullComics$ID == "Public Identity"])
 
 ```
@@ -224,10 +212,10 @@ testsetDC <- allignmentDC[testIndex,]
 trainsetDC <- allignmentDC[-testIndex,]
 
 #creating a decision tree
-allign_model <- rpart(ALIGN ~ EYE + HAIR + SEX + ID + APPEARANCES + YEAR + ALIVE, data = trainsetDC, control = rpart.control(cp = 0.006))
-require(fancyRpartPlot)
-install.packages("rpart.plot")
-library(rpart.plot)
+allign_model <- rpart(ALIGN ~ EYE + HAIR + SEX + ID + APPEARANCES + YEAR + ALIVE, data = trainsetDC, control = rpart.control(cp = 0.01))
+#require(fancyRpartPlot)
+#install.packages("rpart.plot")
+#library(rpart.plot)
 #summary(allign_model)
 fancyRpartPlot(allign_model)
 ##checking the accuracy of the model
